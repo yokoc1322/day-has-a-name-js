@@ -45,14 +45,19 @@ export default {
       drawer: false,
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
           icon: 'mdi-account-box',
           title: 'Login',
           to: '/login'
+        },
+        {
+          icon: 'mdi-file-document-edit',
+          title: 'Write',
+          to: '/write'
+        },
+        {
+          icon: 'mdi-format-list-bulleted-type',
+          title: 'Record',
+          to: '/record'
         }
       ],
       miniVariant: false,

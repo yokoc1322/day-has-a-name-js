@@ -1,49 +1,50 @@
 <template>
-  <v-card class="mx-auto">
-    <v-card-text>
-      <v-form @submit.prevent>
-        <v-text-field
-          v-model="username"
-          label="user name"
-          type="text"
-          required
-          :error="isLoginError"
-          :error-messages="usernameErrors"
-          @blur="refreshErrors()"
-          @input="refreshErrors()"
-        ></v-text-field>
-        <v-text-field
-          v-model="password"
-          label="password"
-          :append-icon="isShownPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="isShownPassword ? 'text' : 'password'"
-          :error="isLoginError"
-          :error-messages="passwordErrors"
-          @click:append="isShownPassword = !isShownPassword"
-          @blur="refreshErrors()"
-          @input="refreshErrors()"
-        ></v-text-field>
-      </v-form>
-      <div class="d-flex align-center">
-        <v-btn :disabled="isDisableSubmit" @click="login">Login</v-btn>
-        <p class="mb-0 ml-3 error--text" :class="{ 'd-none': !isLoginError }">
-          {{ loginErrorMessage }}
-        </p>
-        <v-progress-circular
-          class="ml-3"
-          :class="{ 'd-none': !isLoggingin }"
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
-      </div>
-    </v-card-text>
-  </v-card>
+  <v-container>
+    <v-card class="mx-auto">
+      <v-card-text>
+        <v-form @submit.prevent="login">
+          <v-text-field
+            v-model="username"
+            label="user name"
+            type="text"
+            required
+            :error="isLoginError"
+            :error-messages="usernameErrors"
+            @blur="refreshErrors()"
+            @input="refreshErrors()"
+          ></v-text-field>
+          <v-text-field
+            v-model="password"
+            label="password"
+            :append-icon="isShownPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="isShownPassword ? 'text' : 'password'"
+            :error="isLoginError"
+            :error-messages="passwordErrors"
+            @click:append="isShownPassword = !isShownPassword"
+            @blur="refreshErrors()"
+            @input="refreshErrors()"
+          ></v-text-field>
+          <div class="d-flex align-center">
+            <v-btn :disabled="isDisableSubmit" type="submit">Login</v-btn>
+            <p v-if="isLoginError" class="mb-0 ml-3 error--text">
+              {{ loginErrorMessage }}
+            </p>
+            <v-progress-circular
+              v-if="isLoggingin"
+              class="ml-3"
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
-import axios from 'axios'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -84,19 +85,19 @@ export default {
       if (this.$v.$error) return
       this.isLoggingin = true
 
-      axios
-        .post(
-          '/api-token-auth/',
-          { username: this.username, password: this.password },
-          { baseURL: this.serverURL }
-        )
+      this.$axios
+        .post('/api-token-auth/', {
+          username: this.username,
+          password: this.password
+        })
         .then((res) => {
           const token = res.data.token
-          this.$store.commit('setToken', { token })
-          // TODO: MOVE wirte page
+          this.$store.commit('setToken', token)
+          this.$router.push('write')
         })
         .catch((error) => {
           const res = error.response
+          console.log(error)
           this.isLoginError = true
           if (res.status === 400) {
             this.loginErrorMessage = 'Wrong username or password'

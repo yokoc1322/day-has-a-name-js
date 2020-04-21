@@ -1,10 +1,12 @@
 export const state = () => ({
-  token: null,
-  serverURL: 'http://localhost:8000'
+  token: null
 })
 
 export const mutations = {
   setToken(state, token) {
     state.token = token
+  },
+  clearToken(state) {
+    state.token = null
   }
 }

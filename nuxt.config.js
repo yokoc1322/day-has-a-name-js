@@ -87,6 +87,10 @@ export default {
     extend(config, ctx) {}
   },
 
+  router: {
+    middleware: 'launch-heroku'
+  },
+
   generate: {
     fallback: true
   }

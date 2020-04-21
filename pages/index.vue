@@ -1,19 +1,11 @@
-<template>
-  <v-container>
-    <p>{{ count }}</p>
-  </v-container>
-</template>
-
 <script>
-import { mapState } from 'vuex'
 export default {
-  data() {
-    return {
-      hello: 'hello'
+  created() {
+    if (this.$store.state.token) {
+      this.$router.replace('/write')
+    } else {
+      this.$router.replace('/login')
     }
-  },
-  computed: {
-    ...mapState(['count'])
   }
 }
 </script>

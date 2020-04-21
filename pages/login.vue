@@ -49,6 +49,7 @@ import { mapState, mapMutations } from 'vuex'
 
 export default {
   mixins: [validationMixin],
+  middleware: ['require-no-login'],
   data() {
     return {
       username: '',
@@ -93,11 +94,10 @@ export default {
         .then((res) => {
           const token = res.data.token
           this.$store.commit('setToken', token)
-          this.$router.push('write')
+          this.$router.push('/write')
         })
         .catch((error) => {
           const res = error.response
-          console.log(error)
           this.isLoginError = true
           if (res.status === 400) {
             this.loginErrorMessage = 'Wrong username or password'

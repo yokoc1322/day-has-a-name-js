@@ -2,20 +2,22 @@
   <v-app dark>
     <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" fixed app>
       <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
+        <template v-for="(item, i) in items">
+          <v-list-item
+            v-if="isShowMenuItem(item)"
+            :key="i"
+            :to="item.to"
+            router
+            exact
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
@@ -45,25 +47,44 @@ export default {
       drawer: false,
       items: [
         {
-          icon: 'mdi-account-box',
+          icon: 'mdi-login',
           title: 'Login',
-          to: '/login'
+          to: '/login',
+          requrieNoLogin: true
         },
         {
           icon: 'mdi-file-document-edit',
           title: 'Write',
-          to: '/write'
+          to: '/write',
+          requireLogin: true
         },
         {
           icon: 'mdi-format-list-bulleted-type',
           title: 'Record',
-          to: '/record'
+          to: '/record',
+          requireLogin: true
+        },
+        {
+          icon: 'mdi-logout',
+          title: 'Logout',
+          to: '/logout',
+          requireLogin: true
         }
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'Day has a Name'
+    }
+  },
+  methods: {
+    isShowMenuItem(item) {
+      if (item.requireLogin === true) {
+        return !!this.$store.state.token
+      } else if (item.requrieNoLogin === true) {
+        return !this.$store.state.token
+      }
+      return true
     }
   }
 }

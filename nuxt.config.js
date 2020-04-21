@@ -53,7 +53,8 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'http://localhost:8000/'
+    baseURL: 'https://day-has-a-name.herokuapp.com/'
+    // baseURL: 'http://localhost:8000/'
   },
   /*
    ** vuetify module configuration
@@ -84,5 +85,9 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+
+  generate: {
+    fallback: true
   }
 }

@@ -124,18 +124,12 @@ export default {
       this.isSending = true
       this.sendErrorMessage = null
       try {
-        await this.$axios.put(
-          `/api/v1/record/${this.pk}/`,
-          {
-            content: this.content,
-            title: this.title,
-            date: this.date,
-            status: this.status
-          },
-          {
-            headers: { Authorization: `Token ${this.$store.state.token}` }
-          }
-        )
+        await this.$axios.put(`/api/v1/record/${this.pk}/`, {
+          content: this.content,
+          title: this.title,
+          date: this.date,
+          status: this.status
+        })
         this.$router.push('/record')
       } catch (err) {
         this.sendErrorMessage = err.response.data

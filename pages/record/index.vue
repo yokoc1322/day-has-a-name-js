@@ -42,9 +42,7 @@ export default {
 
   async asyncData({ store, $axios }) {
     try {
-      const res = await $axios.get('/api/v1/record/?ordering=-date', {
-        headers: { Authorization: `Token ${store.state.token}` }
-      })
+      const res = await $axios.get('/api/v1/record/?ordering=-date')
       return { records: res.data, isLoading: false }
     } catch (err) {
       return { errorMessage: err.response.data, isLoading: false }

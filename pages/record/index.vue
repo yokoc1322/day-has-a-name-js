@@ -12,7 +12,9 @@
     <v-row v-else dense>
       <v-col v-for="(record, index) in records" :key="index" cols="12">
         <v-card>
-          <v-card-title>{{ record.title }}</v-card-title>
+          <router-link :to="{ path: '' + record.pk }" append>
+            <v-card-title>{{ record.title }}</v-card-title>
+          </router-link>
           <v-card-subtitle>
             {{ record.date }}
             <v-icon v-if="record.status === 'great'">

@@ -96,7 +96,7 @@ export default {
             headers: { Authorization: `Token ${this.$store.state.token}` }
           }
         )
-        this.$router.push('record')
+        this.$router.push('/record')
       } catch (err) {
         this.errorMessage = err.response.data
       }

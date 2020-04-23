@@ -1,5 +1,6 @@
 export const state = () => ({
-  token: null
+  token: null,
+  isHerokuLaunched: false
 })
 
 export const mutations = {
@@ -8,5 +9,8 @@ export const mutations = {
   },
   clearToken(state) {
     state.token = null
+  },
+  setFlagLaunchHeroku(state) {
+    state.isHerokuLaunched = true
   }
 }

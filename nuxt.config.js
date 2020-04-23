@@ -89,7 +89,7 @@ export default {
   },
 
   router: {
-    middleware: 'launch-heroku'
+    middleware: ['cookie-to-store', 'launch-heroku']
   },
 
   generate: {

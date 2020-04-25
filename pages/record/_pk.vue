@@ -1,11 +1,5 @@
 <template>
   <v-container>
-    <v-progress-circular
-      v-if="isLoading"
-      class="ml-3"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
     <template v-if="getErrorMessage">
       <p>{{ getErrorMessage }}</p>
     </template>
@@ -58,8 +52,8 @@
 
         <div class="d-flex align-center">
           <v-btn type="submit">Write</v-btn>
-          <p v-if="sendErrorMessae" class="mb-0 ml-3 error--text">
-            {{ sendErrorMessae }}
+          <p v-if="sendErrorMessage" class="mb-0 ml-3 error--text">
+            {{ sendErrorMessage }}
           </p>
           <v-progress-circular
             v-if="isSending"
@@ -67,6 +61,10 @@
             indeterminate
             color="primary"
           ></v-progress-circular>
+          <v-spacer></v-spacer>
+          <v-btn type="button" class="error darken-2" @click="deleteRecord">
+            Delete
+          </v-btn>
         </div>
       </v-form>
     </template>
@@ -86,20 +84,18 @@ export default {
         content: res.data.content,
         title: res.data.title,
         date: res.data.date,
-        status: res.data.status,
-        isLoading: false
+        status: res.data.status
       }
     } catch (err) {
       if (err.response.status === 404) {
         error({ statusCode: 404, message: 'Not found' })
       } else {
-        return { getErrorMessage: err.response.data, isLoading: false }
+        return { getErrorMessage: err.response.data }
       }
     }
   },
   data() {
     return {
-      isLoading: true,
       record: null,
       getErrorMessage: null,
       content: '',
@@ -135,6 +131,17 @@ export default {
         this.sendErrorMessage = err.response.data
       }
 
+      this.isSending = false
+    },
+    async deleteRecord() {
+      this.isSending = true
+      this.sendErrorMessage = null
+      try {
+        await this.$axios.delete(`/api/v1/record/${this.pk}/`)
+        this.$router.push('/record')
+      } catch (err) {
+        this.sendErrorMessage = err.response.data
+      }
       this.isSending = false
     }
   }

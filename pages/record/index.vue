@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-progress-circular
-      v-if="isLoading"
-      class="ml-3"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <p v-else-if="errorMessage" class="error--text">
+    <p v-if="errorMessage" class="error--text">
       {{ errorMessage }}
     </p>
 
@@ -18,6 +12,9 @@
             <v-icon>mdi-calendar</v-icon>
           </v-btn>
         </router-link>
+        <v-btn class="ml-2" @click="dumpRecord">
+          <v-icon>mdi-file-download</v-icon>
+        </v-btn>
       </div>
 
       <v-row dense>
@@ -51,22 +48,39 @@
 </template>
 
 <script>
+import moment from 'moment/moment'
 export default {
   middleware: ['require-login'],
 
   async asyncData({ store, $axios }) {
     try {
       const res = await $axios.get('/api/v1/record/?ordering=-date')
-      return { records: res.data, isLoading: false }
+      return { records: res.data }
     } catch (err) {
-      return { errorMessage: err.response.data, isLoading: false }
+      return { errorMessage: err.response.data }
     }
   },
   data() {
     return {
-      isLoading: true,
       records: [],
       errorMessage: null
+    }
+  },
+  methods: {
+    async dumpRecord() {
+      try {
+        const day = moment().format('YYYY-MM-DD')
+        const res = await this.$axios.get('/api/v1/record/?ordering=-date')
+        const url = URL.createObjectURL(new Blob([JSON.stringify(res.data)]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `dump-${day}.json`)
+        document.body.append(link)
+        link.click()
+      } catch (err) {
+        alert(err)
+        console.log(err)
+      }
     }
   }
 }
